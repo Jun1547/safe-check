@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -148,7 +147,7 @@
       </div>
     </div>
     <div class="field">
-      <label>은폐 가능 구조물 여부 (선반·거치대 등) <span class="required">*</span></label>
+      <label>은폐 가능 구조물 여부 <span class="required">*</span></label>
       <div class="radio-group">
         <label><input type="radio" name="r4" value="10"> 없음</label>
         <label><input type="radio" name="r4" value="5"> 일부 있음</label>
@@ -156,7 +155,7 @@
       </div>
     </div>
     <div class="field">
-      <label>구멍·선정적 낙서 등 훼손 여부 <span class="required">*</span></label>
+      <label>구멍·훼손 여부 <span class="required">*</span></label>
       <div class="radio-group">
         <label><input type="radio" name="r8" value="10"> 없음</label>
         <label><input type="radio" name="r8" value="5"> 일부 있음</label>
@@ -274,32 +273,28 @@ function removePhoto(e,idx){
   box.querySelector('.ph-label').style.display='block';
   box.querySelector('input[type=file]').value='';
 }
-// 기존 calcGrade 함수 마지막 부분에 추가하세요
-  function sendToGoogle(payload) {
-   const scriptURL = "https://script.goole.com/macros/s/AKfycbwSOogbnDNJkKmISm9YJY12WBXPwg-HZzOvqDS17QQWGPTfi62xNNM0H2g5jzwClNQ8/exec";
 
-   fetch(scriptURL, {
-     method: "POST",
-     mode: 'no-cors',
-     headers: {'Dontent-Type':
-      'application/json;},
-      body: JSON.stringify(payload)
-   }).then(res => alert("데이터가 구글 시트에 저장되었습니다!"))
-   .catch(err => console.error(err));
-  }
-
-
-
+function sendToGoogle(payload) {
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwSOogbnDNJkKmISm9YJY12WBXPwg-HZzOvqDS17QQWGPTfi62xNNM0H2g5jzwClNQ8/exec";
+  
+  fetch(scriptURL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(() => alert("데이터가 구글 시트에 기록되었습니다."))
+  .catch(err => console.error(err));
 }
+
 function calcGrade(){
   var fields=['r1','r2','r3','r4','r5','r6','r7','r8'];
-  var score=0,missing=false;
+  var score=0, missing=false;
   fields.forEach(function(n){
     var el=document.querySelector('input[name='+n+']:checked');
-    if(el)score+=parseInt(el.value);else missing=true;
+    if(el) score+=parseInt(el.value); else missing=true;
   });
-
-  if(missing){alert('모든 점검 항목을 선택해 주세요.');return;}
+  if(missing){alert('모든 점검 항목을 선택해 주세요.'); return;}
 
   var date=document.getElementById('f-date').value||'미입력';
   var time=document.getElementById('f-time').value||'미입력';
@@ -309,10 +304,10 @@ function calcGrade(){
   var insVal=ins?ins.value:'미입력';
   var memo=document.getElementById('f-memo').value||'없음';
 
-  var grade,msg,cls;
-  if(score>=70){grade='A등급 (안심)';cls='grade-A';msg='안심 인증 스티커 부착 대상 · 분기 1회 점검';}
-  else if(score>=50){grade='B등급 (양호)';cls='grade-B';msg='경미한 보완 권고 · 격월 1회 점검';}
-  else{grade='C등급 (취약)';cls='grade-C';msg='구청 즉시 통보 및 환경개선 연계 · 월 1회 집중 점검';}
+  var grade, msg, cls;
+  if(score>=70){grade='A등급 (안심)'; cls='grade-A'; msg='안심 인증 스티커 부착 대상 · 분기 1회 점검';}
+  else if(score>=50){grade='B등급 (양호)'; cls='grade-B'; msg='경미한 보완 권고 · 격월 1회 점검';}
+  else{grade='C등급 (취약)'; cls='grade-C'; msg='구청 즉시 통보 및 환경개선 연계 · 월 1회 집중 점검';}
 
   document.getElementById('result-box').style.display='block';
   document.getElementById('result-score').textContent=score+'점 / 100점';
@@ -323,21 +318,20 @@ function calcGrade(){
     '<strong>시설명</strong> '+place+'<br>'+
     '<strong>점검자</strong> '+insVal+' / '+name+'<br>'+
     '<strong>특이사항</strong> '+memo;
- 
- // 구글 시트 전송
-  var payload = {
-   date: date,
-   time: time,
-   place: place,
-   inspector: insVal,
-   name: name,
-   score: score,
-   grade: grade,
-   memo: memo
- };
- sendToGoogle(payload);
 
- 
+  // 구글 시트 전송
+  var payload = {
+    date: date,
+    time: time,
+    place: place,
+    inspector: insVal,
+    name: name,
+    score: score,
+    grade: grade,
+    memo: memo
+  };
+  sendToGoogle(payload);
+
   var ph='';
   photoData.forEach(function(d,i){
     if(d)ph+='<div class="r-photo-item"><img src="'+d+'" alt=""><p>'+photoLabels[i]+'</p></div>';
@@ -346,6 +340,5 @@ function calcGrade(){
   document.getElementById('result-box').scrollIntoView({behavior:'smooth'});
 }
 </script>
-
 </body>
 </html>
