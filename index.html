@@ -274,7 +274,23 @@ function removePhoto(e,idx){
   box.querySelector('.ph-label').style.display='block';
   box.querySelector('input[type=file]').value='';
 }
+// 기존 calcGrade 함수 마지막 부분에 추가하세요
+  function sendToGoogle(payload) {
+   const scriptURL = "https://script.goole.com/macros/s/AKfycbwSOogbnDNJkKmISm9YJY12WBXPwg-HZzOvqDS17QQWGPTfi62xNNM0H2g5jzwClNQ8/exec";
 
+   fetch(scriptURL, {
+     method: "POST",
+     mode: 'no-cors',
+     headers: {'Dontent-Type':
+      'application/json;},
+      body: JSON.stringify(payload)
+   }).then(res => alert("데이터가 구글 시트에 저장되었습니다!"))
+   .catch(err => console.error(err));
+  }
+
+
+
+}
 function calcGrade(){
   var fields=['r1','r2','r3','r4','r5','r6','r7','r8'];
   var score=0,missing=false;
@@ -282,31 +298,6 @@ function calcGrade(){
     var el=document.querySelector('input[name='+n+']:checked');
     if(el)score+=parseInt(el.value);else missing=true;
   });
-
- // 기존 calcGrade 함수 마지막 부분에 추가하세요
-  function sendData(data) {
-   const url = "https://script.goole.com/macros/s/AKfycbwSOogbnDNJkKmISm9YJY12WBXPwg-HZzOvqDS17QQWGPTfi62xNNM0H2g5jzwClNQ8/exec":;
-
-   fetch(url, {
-     method: "POST",
-     body: JSON.stringify(data)
-   }).then(res => alert("데이터가 구글 시트에 저장되었습니다!"));
-  }
-
-  // calcGrade 함수 내에서 등급 계산이 끝난 후 호출
-    var  payload = {
-       date: date,
-       time: time,
-       place: place,
-       inspector: insVal,
-       name: name,
-       score: score,
-       grade: grade,
-       memo: memo
-  };
-  sendData(payload);
-
-}
 
   if(missing){alert('모든 점검 항목을 선택해 주세요.');return;}
 
@@ -332,8 +323,9 @@ function calcGrade(){
     '<strong>시설명</strong> '+place+'<br>'+
     '<strong>점검자</strong> '+insVal+' / '+name+'<br>'+
     '<strong>특이사항</strong> '+memo;
-
- var payload = {
+ 
+ // 구글 시트 전송
+  var payload = {
    date: date,
    time: time,
    place: place,
@@ -343,12 +335,9 @@ function calcGrade(){
    grade: grade,
    memo: memo
  };
-
  sendToGoogle(payload);
 
- document.getElementById('result-box').scrollIntoView({behavior:'smooth'});
- }
-
+ 
   var ph='';
   photoData.forEach(function(d,i){
     if(d)ph+='<div class="r-photo-item"><img src="'+d+'" alt=""><p>'+photoLabels[i]+'</p></div>';
