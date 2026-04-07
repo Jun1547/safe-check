@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>불법촬영 현장점검표</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#f4f6fb;font-family:'맑은 고딕',sans-serif;padding:1.5rem 1rem;}
+  .wrap{max-width:600px;margin:0 auto;}
+  .header{background:#1A3C6E;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;}
+  .header h1{color:#fff;font-size:20px;font-weight:600;margin-bottom:4px;}
+  .header p{color:#AECBF0;font-size:15px;}
+  .section{background:#fff;border:1px solid #e0e6f0;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1rem;}
+  .section-title{font-size:15px;font-weight:600;color:#1A3C6E;border-left:3px solid #1A3C6E;padding-left:8px;margin-bottom:1rem;}
+  .field{margin-bottom:1.1rem;}
+  .field label{display:block;font-size:15px;color:#555;margin-bottom:6px;}
+  .field input[type=text],.field input[type=date],.field input[type=time],.field textarea{width:100%;padding:9px 11px;border:1px solid #d0d8e8;border-radius:8px;font-size:16px;color:#222;background:#f9fafc;font-family:'맑은 고딕',sans-serif;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .radio-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .radio-group label{display:flex;align-items:center;gap:6px;padding:7px 15px;border:1px solid #d0d8e8;border-radius:20px;font-size:15px;cursor:pointer;color:#333;background:#f9fafc;transition:all 0.15s;}
+  .radio-group label:hover{border-color:#1A3C6E;background:#eef3fb;}
+  .radio-group input[type=radio]{accent-color:#1A3C6E;}
+  .grade-guide{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+  .guide-item{padding:10px;border-radius:8px;text-align:center;}
+  .g-label{font-size:15px;font-weight:600;}
+  .g-score{font-size:13px;margin-top:3px;}
+  .g-desc{font-size:13px;margin-top:2px;}
+  .photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px;}
+  .photo-box{position:relative;border:1.5px dashed #b0bdd4;border-radius:10px;background:#f4f7fc;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:border-color 0.15s;}
+  .photo-box:hover{border-color:#1A3C6E;background:#eef3fb;}
+  .photo-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .ph-icon{font-size:22px;color:#aab8d0;margin-bottom:4px;pointer-events:none;}
+  .ph-label{font-size:13px;color:#888;text-align:center;padding:0 4px;line-height:1.4;pointer-events:none;}
+  .photo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:9px;display:none;}
+  .ph-remove{display:none;position:absolute;top:4px;right:4px;background:#c0392b;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;z-index:2;align-items:center;justify-content:center;line-height:1;}
+  .submit-btn{width:100%;padding:14px;background:#1A3C6E;color:#fff;border:none;border-radius:10px;font-size:18px;font-family:'맑은 고딕',sans-serif;cursor:pointer;margin-top:0.5rem;font-weight:600;letter-spacing:1px;}
+  .submit-btn:hover{background:#15305a;}
+  .result-box{display:none;background:#f0f4fb;border:1px solid #c8d8f0;border-radius:12px;padding:1.5rem;margin-top:1rem;text-align:center;}
+  .r-label{font-size:15px;color:#666;margin-bottom:6px;}
+  .r-score{font-size:30px;font-weight:700;color:#1A3C6E;}
+  .grade-badge{display:inline-block;padding:6px 20px;border-radius:20px;font-size:16px;font-weight:600;margin:10px 0 6px;}
+  .grade-A{background:#EAF3DE;color:#3B6D11;}
+  .grade-B{background:#E6F1FB;color:#185FA5;}
+  .grade-C{background:#FAEEDA;color:#854F0B;}
+  .r-msg{font-size:15px;color:#555;margin-top:4px;}
+  .r-detail{margin-top:16px;text-align:left;background:#fff;border-radius:8px;padding:12px 14px;font-size:15px;color:#333;line-height:2.2;}
+  .r-detail strong{color:#1A3C6E;}
+  .r-photos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
+  .r-photo-item img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:1px solid #d0d8e8;}
+  .r-photo-item p{font-size:13px;color:#888;text-align:center;margin-top:4px;}
+  .print-btn{display:inline-block;margin-top:14px;padding:8px 20px;background:#fff;border:1px solid #1A3C6E;border-radius:8px;color:#1A3C6E;font-size:15px;cursor:pointer;font-family:'맑은 고딕',sans-serif;}
+  .required{color:#c0392b;}
+  @media print{
+    body{background:#fff;padding:0;}
+    .submit-btn,.print-btn,.ph-remove{display:none !important;}
+    .result-box{display:block !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>불법촬영 현장점검표</h1>
+    <p>서울도봉경찰서 성폭력 전문예방팀 × 도봉구청 불법촬영 점검단 점검용</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">등급 기준 안내</div>
+    <div class="grade-guide">
+      <div class="guide-item" style="background:#EAF3DE;">
+        <div class="g-label" style="color:#3B6D11;">A등급 (안심)</div>
+        <div class="g-score" style="color:#3B6D11;">70점 이상</div>
+        <div class="g-desc" style="color:#3B6D11;">인증 스티커 부착</div>
+      </div>
+      <div class="guide-item" style="background:#E6F1FB;">
+        <div class="g-label" style="color:#185FA5;">B등급 (양호)</div>
+        <div class="g-score" style="color:#185FA5;">50~69점</div>
+        <div class="g-desc" style="color:#185FA5;">보완 권고</div>
+      </div>
+      <div class="guide-item" style="background:#FAEEDA;">
+        <div class="g-label" style="color:#854F0B;">C등급 (취약)</div>
+        <div class="g-score" style="color:#854F0B;">49점 이하</div>
+        <div class="g-desc" style="color:#854F0B;">구청 통보·개선</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">기본 정보</div>
+    <div class="row2">
+      <div class="field">
+        <label>점검 일자 <span class="required">*</span></label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="field">
+        <label>점검 시간 <span class="required">*</span></label>
+        <input type="time" id="f-time">
+      </div>
+    </div>
+    <div class="field">
+      <label>시설명 <span class="required">*</span></label>
+      <input type="text" id="f-place" placeholder="예: ○○공원 공중화장실">
+    </div>
+    <div class="field">
+      <label>점검자 구분 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="inspector" value="전문점검단"> 전문점검단</label>
+        <label><input type="radio" name="inspector" value="시민감시단"> 시민감시단</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>점검자 이름</label>
+      <input type="text" id="f-name" placeholder="이름 또는 번호 입력">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 탐지장비 점검 (30점)</div>
+    <div class="field">
+      <label>전파 탐지기 이상 유무 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r1" value="15"> 이상 없음</label>
+        <label><input type="radio" name="r1" value="7"> 의심 반응</label>
+        <label><input type="radio" name="r1" value="0"> 이상 있음</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>렌즈 탐지기 이상 유무 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r2" value="15"> 이상 없음</label>
+        <label><input type="radio" name="r2" value="7"> 의심 반응</label>
+        <label><input type="radio" name="r2" value="0"> 이상 있음</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 시설 구조 점검 (30점)</div>
+    <div class="field">
+      <label>CCTV 사각지대 여부 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r3" value="10"> 없음</label>
+        <label><input type="radio" name="r3" value="5"> 일부 있음</label>
+        <label><input type="radio" name="r3" value="0"> 다수 있음</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>은폐 가능 구조물 여부 (선반·거치대 등) <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r4" value="10"> 없음</label>
+        <label><input type="radio" name="r4" value="5"> 일부 있음</label>
+        <label><input type="radio" name="r4" value="0"> 다수 있음</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>구멍·선정적 낙서 등 훼손 여부 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r8" value="10"> 없음</label>
+        <label><input type="radio" name="r8" value="5"> 일부 있음</label>
+        <label><input type="radio" name="r8" value="0"> 다수 있음</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 관리 상태 (20점)</div>
+    <div class="field">
+      <label>점검 이력 관리 여부 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r5" value="10"> 관리됨</label>
+        <label><input type="radio" name="r5" value="0"> 미관리</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>시설 청결·조명 상태 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r6" value="10"> 양호</label>
+        <label><input type="radio" name="r6" value="5"> 보통</label>
+        <label><input type="radio" name="r6" value="0"> 불량</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 시설 노후도 (20점)</div>
+    <div class="field">
+      <label>시설 노후 정도 <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="r7" value="20"> 신축·양호</label>
+        <label><input type="radio" name="r7" value="10"> 보통</label>
+        <label><input type="radio" name="r7" value="0"> 노후·불량</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">특이사항 및 현장 사진</div>
+    <div class="field">
+      <label>특이사항 기록</label>
+      <textarea id="f-memo" placeholder="의심 물체, 구조 문제 등 특이사항을 자세히 기록해 주세요."></textarea>
+    </div>
+    <div class="field">
+      <label>현장 사진 첨부 (최대 3장)</label>
+      <div class="photo-grid">
+        <div class="photo-box" id="box0">
+          <input type="file" accept="image/*" capture="environment" onchange="previewPhoto(this,0)">
+          <div class="ph-icon">📷</div>
+          <div class="ph-label">시설 전경</div>
+          <img id="prev0" alt="">
+          <button class="ph-remove" id="rm0" onclick="removePhoto(event,0)">✕</button>
+        </div>
+        <div class="photo-box" id="box1">
+          <input type="file" accept="image/*" capture="environment" onchange="previewPhoto(this,1)">
+          <div class="ph-icon">📷</div>
+          <div class="ph-label">의심 구역</div>
+          <img id="prev1" alt="">
+          <button class="ph-remove" id="rm1" onclick="removePhoto(event,1)">✕</button>
+        </div>
+        <div class="photo-box" id="box2">
+          <input type="file" accept="image/*" capture="environment" onchange="previewPhoto(this,2)">
+          <div class="ph-icon">📷</div>
+          <div class="ph-label">특이사항</div>
+          <img id="prev2" alt="">
+          <button class="ph-remove" id="rm2" onclick="removePhoto(event,2)">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<button class="submit-btn" onclick="calcGrade()">점검 완료 · 등급 확인</button>
+
+  <div class="result-box" id="result-box">
+    <div class="r-label">총점</div>
+    <div class="r-score" id="result-score">—</div>
+    <div id="result-grade"></div>
+    <div class="r-msg" id="result-msg"></div>
+    <div class="r-detail" id="result-detail"></div>
+    <div class="r-photos" id="result-photos"></div>
+    <button class="print-btn" onclick="window.print()">결과 인쇄 / 저장</button>
+  </div>
+</div>
+
+<script>
+var photoData=[null,null,null];
+var photoLabels=['시설 전경','의심 구역','특이사항'];
+
+function previewPhoto(input,idx){
+  if(!input.files||!input.files[0])return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    photoData[idx]=e.target.result;
+    var img=document.getElementById('prev'+idx);
+    img.src=e.target.result;
+    img.style.display='block';
+    document.getElementById('rm'+idx).style.display='flex';
+    var box=document.getElementById('box'+idx);
+    box.querySelector('.ph-icon').style.display='none';
+    box.querySelector('.ph-label').style.display='none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function removePhoto(e,idx){
+  e.preventDefault();e.stopPropagation();
+  photoData[idx]=null;
+  var img=document.getElementById('prev'+idx);
+  img.src='';img.style.display='none';
+  document.getElementById('rm'+idx).style.display='none';
+  var box=document.getElementById('box'+idx);
+  box.querySelector('.ph-icon').style.display='block';
+  box.querySelector('.ph-label').style.display='block';
+  box.querySelector('input[type=file]').value='';
+}
+
+function calcGrade(){
+  var fields=['r1','r2','r3','r4','r5','r6','r7','r8'];
+  var score=0,missing=false;
+  fields.forEach(function(n){
+    var el=document.querySelector('input[name='+n+']:checked');
+    if(el)score+=parseInt(el.value);else missing=true;
+  });
+  if(missing){alert('모든 점검 항목을 선택해 주세요.');return;}
+
+  var date=document.getElementById('f-date').value||'미입력';
+  var time=document.getElementById('f-time').value||'미입력';
+  var place=document.getElementById('f-place').value||'미입력';
+  var name=document.getElementById('f-name').value||'미입력';
+  var ins=document.querySelector('input[name=inspector]:checked');
+  var insVal=ins?ins.value:'미입력';
+  var memo=document.getElementById('f-memo').value||'없음';
+
+  var grade,msg,cls;
+  if(score>=70){grade='A등급 (안심)';cls='grade-A';msg='안심 인증 스티커 부착 대상 · 분기 1회 점검';}
+  else if(score>=50){grade='B등급 (양호)';cls='grade-B';msg='경미한 보완 권고 · 격월 1회 점검';}
+  else{grade='C등급 (취약)';cls='grade-C';msg='구청 즉시 통보 및 환경개선 연계 · 월 1회 집중 점검';}
+
+  document.getElementById('result-box').style.display='block';
+  document.getElementById('result-score').textContent=score+'점 / 100점';
+  document.getElementById('result-grade').innerHTML='<span class="grade-badge '+cls+'">'+grade+'</span>';
+  document.getElementById('result-msg').textContent=msg;
+  document.getElementById('result-detail').innerHTML=
+    '<strong>점검 일시</strong> '+date+' '+time+'<br>'+
+    '<strong>시설명</strong> '+place+'<br>'+
+    '<strong>점검자</strong> '+insVal+' / '+name+'<br>'+
+    '<strong>특이사항</strong> '+memo;
+
+  var ph='';
+  photoData.forEach(function(d,i){
+    if(d)ph+='<div class="r-photo-item"><img src="'+d+'" alt=""><p>'+photoLabels[i]+'</p></div>';
+  });
+  document.getElementById('result-photos').innerHTML=ph;
+  document.getElementById('result-box').scrollIntoView({behavior:'smooth'});
+}
+</script>
+
+</body>
+</html>
