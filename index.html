@@ -285,7 +285,7 @@ function calcGrade(){
 
  // 기존 calcGrade 함수 마지막 부분에 추가하세요
   function sendData(data) {
-   const url = "https://script.goole.com/macros/s/AKfycbxdB01VP7p08l30V2LSWw2HxZHT7mJYjO0bogcpuky5vQMEqCSHf9TpUuvMy-4Wdl1J/exec";
+   const url = "https://script.goole.com/macros/s/AKfycbwSOogbnDNJkKmISm9YJY12WBXPwg-HZzOvqDS17QQWGPTfi62xNNM0H2g5jzwClNQ8/exec":;
 
    fetch(url, {
      method: "POST",
@@ -332,6 +332,22 @@ function calcGrade(){
     '<strong>시설명</strong> '+place+'<br>'+
     '<strong>점검자</strong> '+insVal+' / '+name+'<br>'+
     '<strong>특이사항</strong> '+memo;
+
+ var payload = {
+   date: date,
+   time: time,
+   place: place,
+   inspector: insVal,
+   name: name,
+   score: score,
+   grade: grade,
+   memo: memo
+ };
+
+ sendToGoogle(payload);
+
+ document.getElementById('result-box').scrollIntoView({behavior:'smooth'});
+ }
 
   var ph='';
   photoData.forEach(function(d,i){
